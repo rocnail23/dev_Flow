@@ -16,12 +16,12 @@ export async function POST(req: Request) {
  
   // Get the headers
   const headerPayload = headers();
-  const svix_id = headerPayload.get("svix-id");
-  const svix_timestamp = headerPayload.get("svix-timestamp");
-  const svix_signature = headerPayload.get("svix-signature");
+  const svixId = headerPayload.get("svix-id");
+  const svixTimestamp = headerPayload.get("svix-timestamp");
+  const svixSignature = headerPayload.get("svix-signature");
  
   // If there are no headers, error out
-  if (!svix_id || !svix_timestamp || !svix_signature) {
+  if (!svixId || !svixTimestamp || !svixSignature) {
     return new Response('Error occured -- no svix headers', {
       status: 400
     })
@@ -39,9 +39,9 @@ export async function POST(req: Request) {
   // Verify the payload with the headers
   try {
     evt = wh.verify(body, {
-      "svix-id": svix_id,
-      "svix-timestamp": svix_timestamp,
-      "svix-signature": svix_signature,
+      "svix-id": svixId,
+      "svix-timestamp": svixTimestamp,
+      "svix-signature": svixSignature,
     }) as WebhookEvent
   } catch (err) {
     console.error('Error verifying webhook:', err);
@@ -54,7 +54,7 @@ export async function POST(req: Request) {
   
   const eventType = evt.type;
  
-   if(eventType == "user.created"){
+   if(eventType === "user.created"){
 
     const { id,email_addresses,image_url,username,first_name } = evt.data;
 
@@ -62,7 +62,7 @@ export async function POST(req: Request) {
     return NextResponse.json({status:ok,user})
    }
 
-   if(eventType == "user.updated"){
+   if(eventType === "user.updated"){
     const { id,email_addresses,image_url,username,first_name } = evt.data;
 
     const updateData = {
@@ -76,7 +76,7 @@ export async function POST(req: Request) {
     return NextResponse.json({status:ok,user})
    }
 
-   if(eventType == "user.deleted"){
+   if(eventType === "user.deleted"){
     const { id } = evt.data;
 
     const user = await deleteUser({clerkId:id!})
