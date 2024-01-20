@@ -18,7 +18,7 @@ export const connectToDatabase = async () => {
 
     isConnected = true;
 
-    mongoose.Collection
+   
 
     console.log('🍃 MongoDB is connected 🍃');
   } catch (error) {
